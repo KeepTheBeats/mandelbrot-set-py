@@ -23,7 +23,7 @@ def mandelbrotImageFunc(inReal, inImage, cReal, cImage):
     return outImage
 
 
-# use vectorize to let python do the same operation to all elements in the lists in parallel.
+# use vectorize to let Python do the same operation to all elements in the lists in parallel.
 @vectorize(['float64(float64, float64)'])
 def M(cReal, cImage):
     zReal = 0.0

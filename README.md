@@ -1,4 +1,4 @@
-# README
+# Mandelbrot Set Python
 
 This is an assignment of a course about High Performance Computing In Python. Because of the possible copyright problems, I do not put the assignment description in this project.
 

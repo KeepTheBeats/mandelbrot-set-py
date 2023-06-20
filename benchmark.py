@@ -68,7 +68,7 @@ if __name__ == '__main__':
         timeAfter = datetime.datetime.now()
 
         durations[i] = (timeAfter - timeBefore).total_seconds()
-        print('"{}" uses time: {}'.format(methods[i], durations[i]))
+        print('"{}" uses time: {} s'.format(methods[i], durations[i]))
 
     # print results
     print()

@@ -38,7 +38,7 @@ def M(cReal, cImage):
     return float(iotaC) / float(common.iterationLimit)
 
 
-# use guvectorize to let python do the same operation to all elements in the lists in parallel.
+# use guvectorize to let Python do the same operation to all elements in the lists in parallel.
 @guvectorize([(float64[:, :], float64[:, :], float64[:, :])],
              '(m, n),(m, n)->(m, n)')
 def doMForAll(reals2d, images2d, results):
