@@ -12,6 +12,8 @@ resultsFile = "results_{}.csv".format(version)
 
 num_cores = multiprocessing.cpu_count()
 
+maxChunkPerWorker = 10  # adjust the size of chunks
+
 
 def mandelbrotFunc(inReal: float, inImage: float, cReal: float,
                    cImage: float) -> tuple[float, float]:
@@ -61,10 +63,20 @@ def doM(reals2d, images2d, results, iStart: int, iEnd: int):
             thisResult = M(reals2d[i][j], images2d[i][j])
             # For multiThreads, the memory is shared, so maybe we need a lock here, but this code can ensure that any 2 threads will not read or write a same position, so I think maybe we do not need a lodk here.
             results[i][j] = thisResult
+    print("Finish [{}, {})]".format(iStart, iEnd))
     return results, iStart, iEnd
 
 
-def calcResults(maxWorkers=num_cores, multiThreads=False):
+def calcResults(maxWorkers=num_cores,
+                multiThreads=False,
+                chunkPerWorker=common.numReal // 500):
+
+    # The minimum chunkPerWorker is 1.
+    # If the chunkPerWorker is too large, the Python program will use too much memory and be OOM killed, so we set the maxmum chunk is 10.
+    if chunkPerWorker < 0:
+        chunkPerWorker = 1
+    elif chunkPerWorker > maxChunkPerWorker:
+        chunkPerWorker = maxChunkPerWorker
 
     reals, images, reals2d, images2d = common.genRealsImages()
 
@@ -72,6 +84,7 @@ def calcResults(maxWorkers=num_cores, multiThreads=False):
 
     # start to use multiple processors or threads to work
     print("maxWorkers:", maxWorkers)
+    print("chunkPerWorker:", chunkPerWorker)
     pool = futures._base.Executor()
     if multiThreads:
         print("Using multiple threads.")
@@ -81,7 +94,7 @@ def calcResults(maxWorkers=num_cores, multiThreads=False):
         pool = futures.ProcessPoolExecutor(max_workers=maxWorkers)
 
     # split the tasks into {maxWorkers} parts
-    splitIdxes = splitListIdx(reals2d, maxWorkers)
+    splitIdxes = splitListIdx(reals2d, maxWorkers * chunkPerWorker)
 
     # do the {maxWorkers} parts of tasks in parallel
     print('Start to submit tasks')
