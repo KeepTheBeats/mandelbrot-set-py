@@ -50,9 +50,9 @@ realMin = -2.0
 imageMax = 1.5
 imageMin = -1.5
 
-# This is like the 'resolution', and can affect the execution time of the project.
-numReal = 5000
-numImage = 5000
+# This is like the 'resolution', and can affect the execution time of the project. The project description asks us to select the 2 parameters according to the computational resources I have available.
+numReal = 1000
+numImage = 1000
 
 threshold = 2
 iterationLimit = 100
